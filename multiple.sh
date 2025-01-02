@@ -47,7 +47,7 @@ case $choice in
         echo -e "${TEAL}🔍 Визначення архітектури системи...${RESET}"
         ARCH=$(uname -m)
         if [[ "$ARCH" == "x86_64" || "$ARCH" == "aarch64" ]]; then
-            CLIENT_URL="https://raw.githubusercontent.com/vitnodes/Multiple/main/Multiple"
+            CLIENT_URL="https://github.com/vitnodes/Multiple/releases/download/v1.0/multipleforlinux.tar"
         else
             echo -e "${ORANGE}⚠ Непідтримувана архітектура: $ARCH${RESET}"
             exit 1
