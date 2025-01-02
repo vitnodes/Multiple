@@ -20,7 +20,7 @@ cat << "EOF"
    \  $/   | $$$$$$$/| $$  | $$|  $$$$$$/| $$$$$$$/
     \_/    |_______/ |__/  |__/ \______/ |_______/ 
                                                   
-                                                  
+
 EOF
 
 # Головне меню
@@ -46,10 +46,8 @@ case $choice in
         # Визначення архітектури
         echo -e "${TEAL}🔍 Визначення архітектури системи...${RESET}"
         ARCH=$(uname -m)
-        if [[ "$ARCH" == "x86_64" ]]; then
-            CLIENT_URL="https://github.com/vitnodes/Multiple/blob/main/Multiple"
-        elif [[ "$ARCH" == "aarch64" ]]; then
-            CLIENT_URL="https://github.com/vitnodes/Multiple/blob/main/Multiple"
+        if [[ "$ARCH" == "x86_64" || "$ARCH" == "aarch64" ]]; then
+            CLIENT_URL="https://raw.githubusercontent.com/vitnodes/Multiple/main/Multiple"
         else
             echo -e "${ORANGE}⚠ Непідтримувана архітектура: $ARCH${RESET}"
             exit 1
@@ -59,10 +57,11 @@ case $choice in
         echo -e "${TEAL}📥 Завантаження клієнта...${RESET}"
         wget $CLIENT_URL -O multipleforlinux.tar
 
-        # Розпаковка
+        # Створення директорії та розпаковка
         echo -e "${TEAL}📂 Розпаковка файлів...${RESET}"
-        tar -xvf multipleforlinux.tar
-        cd multipleforlinux
+        mkdir -p ~/multipleforlinux
+        tar -xvf multipleforlinux.tar -C ~/multipleforlinux
+        cd ~/multipleforlinux
 
         # Налаштування прав
         echo -e "${TEAL}🔧 Налаштування прав доступу...${RESET}"
@@ -71,8 +70,8 @@ case $choice in
 
         # Налаштування PATH
         echo -e "${TEAL}⚙️ Налаштування змінних середовища...${RESET}"
-        echo "PATH=\$PATH:$(pwd)" >> ~/.bash_profile
-        source ~/.bash_profile
+        echo "export PATH=\$PATH:$(pwd)" >> ~/.bashrc
+        source ~/.bashrc
 
         # Запуск ноди
         echo -e "${TEAL}🚀 Запуск ноди...${RESET}"
@@ -106,10 +105,10 @@ case $choice in
         echo -e "\n${INDIGO}🗑 Видалення ноди...${RESET}"
         pkill -f multiple-node
         cd ~
-        rm -rf multipleforlinux
+        rm -rf ~/multipleforlinux
         echo -e "${LIME}✅ Нода успішно видалена!${RESET}\n"
         ;;
-        
+
     *)
         echo -e "${ORANGE}⚠ Помилка: оберіть число від 1 до 3${RESET}"
         ;;
