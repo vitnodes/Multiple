@@ -9,16 +9,19 @@ MAGENTA='\033[0;35m'
 WHITE='\033[1;37m'
 RESET='\033[0m'
 
-# Перевірка та встановлення curl
-if ! command -v curl &> /dev/null; then
-    echo -e "${ORANGE}Встановлення curl...${RESET}"
-    sudo apt update
-    sudo apt install curl -y
-fi
-sleep 1
-
-# Завантаження та відображення логотипу
-curl -s "ВСТАВИТИ_СИЛКУ_НА_ЛОГОТИП" | bash
+# Банер
+cat << "EOF"
+ /$$    /$$ /$$$$$$$  /$$   /$$ /$$   /$$ /$$$$$$$ 
+| $$   | $$| $$__  $$| $$  | $$| $$  | $$| $$__  $$
+| $$   | $$| $$  \ $$| $$  | $$| $$  | $$| $$  \ $$
+|  $$ / $$/| $$  | $$| $$$$$$$$| $$  | $$| $$$$$$$ 
+ \  $$ $$/ | $$  | $$| $$__  $$| $$  | $$| $$__  $$
+  \  $$$/  | $$  | $$| $$  | $$| $$  | $$| $$  \ $$
+   \  $/   | $$$$$$$/| $$  | $$|  $$$$$$/| $$$$$$$/
+    \_/    |_______/ |__/  |__/ \______/ |_______/ 
+                                                  
+                                                  
+EOF
 
 # Головне меню
 echo -e "\n${WHITE}╔════════════════════════╗${RESET}"
@@ -44,9 +47,9 @@ case $choice in
         echo -e "${TEAL}🔍 Визначення архітектури системи...${RESET}"
         ARCH=$(uname -m)
         if [[ "$ARCH" == "x86_64" ]]; then
-            CLIENT_URL="https://cdn.app.multiple.cc/client/linux/x64/multipleforlinux.tar"
+            CLIENT_URL="https://github.com/vitnodes/Multiple/blob/main/Multiple"
         elif [[ "$ARCH" == "aarch64" ]]; then
-            CLIENT_URL="https://cdn.app.multiple.cc/client/linux/arm64/multipleforlinux.tar"
+            CLIENT_URL="https://github.com/vitnodes/Multiple/blob/main/Multiple"
         else
             echo -e "${ORANGE}⚠ Непідтримувана архітектура: $ARCH${RESET}"
             exit 1
@@ -54,17 +57,17 @@ case $choice in
 
         # Завантаження клієнта
         echo -e "${TEAL}📥 Завантаження клієнта...${RESET}"
-        wget $CLIENT_URL -O vdhubforlinux.tar
+        wget $CLIENT_URL -O multipleforlinux.tar
 
         # Розпаковка
         echo -e "${TEAL}📂 Розпаковка файлів...${RESET}"
-        tar -xvf vdhubforlinux.tar
-        cd vdhubforlinux
+        tar -xvf multipleforlinux.tar
+        cd multipleforlinux
 
         # Налаштування прав
         echo -e "${TEAL}🔧 Налаштування прав доступу...${RESET}"
-        chmod +x ./vdhub-cli
-        chmod +x ./vdhub-node
+        chmod +x ./multiple-cli
+        chmod +x ./multiple-node
 
         # Налаштування PATH
         echo -e "${TEAL}⚙️ Налаштування змінних середовища...${RESET}"
@@ -73,7 +76,7 @@ case $choice in
 
         # Запуск ноди
         echo -e "${TEAL}🚀 Запуск ноди...${RESET}"
-        nohup ./vdhub-node > output.log 2>&1 &
+        nohup ./multiple-node > output.log 2>&1 &
 
         # Введення даних
         echo -e "${LIME}Введіть Account ID:${RESET}"
@@ -83,27 +86,27 @@ case $choice in
 
         # Прив'язка акаунта
         echo -e "${TEAL}🔗 Прив'язка акаунта...${RESET}"
-        ./vdhub-cli bind --bandwidth-download 100 --identifier $IDENTIFIER --pin $PIN --storage 200 --bandwidth-upload 100
+        ./multiple-cli bind --bandwidth-download 100 --identifier $IDENTIFIER --pin $PIN --storage 200 --bandwidth-upload 100
 
         # Завершення
         echo -e "\n${LIME}✅ Встановлення успішно завершено!${RESET}"
         echo -e "\n${WHITE}Для перевірки статусу використовуйте:${RESET}"
-        echo -e "${TEAL}cd ~/vdhubforlinux && ./vdhub-cli status${RESET}\n"
+        echo -e "${TEAL}cd ~/multipleforlinux && ./multiple-cli status${RESET}\n"
         
         sleep 2
-        cd ~/vdhubforlinux && ./vdhub-cli status
+        cd ~/multipleforlinux && ./multiple-cli status
         ;;
 
     2)
         echo -e "\n${INDIGO}🔍 Перевірка статусу ноди...${RESET}"
-        cd ~/vdhubforlinux && ./vdhub-cli status
+        cd ~/multipleforlinux && ./multiple-cli status
         ;;
 
     3)
         echo -e "\n${INDIGO}🗑 Видалення ноди...${RESET}"
-        pkill -f vdhub-node
+        pkill -f multiple-node
         cd ~
-        rm -rf vdhubforlinux
+        rm -rf multipleforlinux
         echo -e "${LIME}✅ Нода успішно видалена!${RESET}\n"
         ;;
         
